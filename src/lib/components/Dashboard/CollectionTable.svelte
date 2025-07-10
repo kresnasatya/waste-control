@@ -34,9 +34,6 @@
 </script>
 
 <div class="bg-white rounded-lg shadow">
-	<div class="p-4 border-b">
-		<h3 class="font-semibold">Collection Status</h3>
-	</div>
 	<div class="overflow-x-auto">
 		<table class="w-full">
 			<thead class="bg-gray-50">

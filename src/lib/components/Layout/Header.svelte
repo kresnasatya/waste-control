@@ -5,7 +5,7 @@
     let { toggleSidebar } = $props();
 </script>
 
-<header class="bg-white shadow-sm border-b px-6 py-4">
+<header class="bg-white border-b border-gray-200 px-6 py-4">
     <div class="flex items-center justify-between">
         <div class="flex items-center space-x-4">
             <button onclick={toggleSidebar} class="p-2 rounded-lg hover:bg-gray-100 transition-colors" aria-label="Toggle sidebar">

@@ -139,7 +139,7 @@
     });
 </script>
 
-<div bind:this={mapContainer} class="w-full rounded-lg overflow-hidden" style="height: {height}"></div>
+<div bind:this={mapContainer} class="w-full h-full rounded-lg overflow-hidden" style="height: {height}"></div>
 
 <style>
     :global(.custom-marker) {

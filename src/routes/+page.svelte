@@ -176,31 +176,23 @@
 				</button>
 			</div>
 		</div>
+        <StatusIndicators {statusCounts} />
+	</div>
 
-		<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 			<!-- Map and Indicators -->
-			<div class="lg:col-span-2">
-				<StatusIndicators {statusCounts} />
-				<MapView height="320px" />
+			<div class="lg:col-span-1">
+				<MapView />
 			</div>
 
 			<!-- Collection Info Panel -->
-			<div class="bg-gray-50 rounded-lg p-4">
-				<h3 class="font-medium mb-3">Dental Bali</h3>
-				<div class="space-y-2 text-sm">
-					<div><span class="text-gray-600">Type:</span> Hazardous</div>
-					<div><span class="text-gray-600">Status:</span> <span class="text-green-600">Active</span></div>
-					<div><span class="text-gray-600">Last Collection:</span> 10 minutes ago</div>
-				</div>
-			</div>
+			<div class="space-y-4">
+                <VehicleTable {vehicles} />
+                <CollectionTable {collections} {openCollectionDetails} />
+            </div>
 		</div>
-	</div>
-
-	<!-- Tables Section -->
-	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-		<VehicleTable {vehicles} />
-		<CollectionTable {collections} {openCollectionDetails} />
-	</div>
+    </div>
 </div>
 
 <!-- Collection Details Modal using Melt UI -->
