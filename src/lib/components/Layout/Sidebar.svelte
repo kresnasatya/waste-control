@@ -160,7 +160,7 @@
 
 <aside class="bg-white border-r border-gray-200 transition-all duration-300 overflow-y-auto {sidebarCollapsed ? 'w-16' : 'w-64'}">
     <!-- Logo -->
-    <div class="flex items-center p-5 border-b border-gray-200">
+    <div class="flex items-center h-16 px-6 py-4 border-b border-gray-200">
         <div class="flex items-center space-x-2">
             <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
                 <Package class="w-5 h-5 text-white"/>
