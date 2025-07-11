@@ -1,5 +1,4 @@
-<!-- src/lib/components/Dashboard/VehicleTable.svelte -->
-<script>
+<script lang="ts">
 	let { vehicles } = $props();
 </script>
 
@@ -37,14 +36,6 @@
 						<td class="px-4 py-3 text-sm text-gray-700">
 							<div class="flex items-center">
 								<span class="mr-2">{vehicle.stopsDone}</span>
-								{#if vehicle.stopsDone > 0}
-									<div class="w-full bg-gray-200 rounded-full h-2 max-w-20">
-										<div 
-											class="bg-green-600 h-2 rounded-full" 
-											style="width: {(vehicle.stopsDone / vehicle.totalStops) * 100}%"
-										></div>
-									</div>
-								{/if}
 							</div>
 						</td>
 					</tr>
