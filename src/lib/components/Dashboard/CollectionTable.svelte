@@ -6,9 +6,10 @@
         status: string;
     }
 
-	let { collections, openCollectionDetails }: {
+	let { collections, openCollectionDetails, selectedCollection }: {
         collections: Collection[];
         openCollectionDetails: (collection: Collection) => void;
+		selectedCollection: Collection;
     } = $props();
 
 	function getStatusBadgeClass(status: string): string {
@@ -52,7 +53,7 @@
 			<tbody class="bg-white divide-y divide-gray-200">
 				{#each collections as collection}
 					<tr 
-						class="hover:bg-gray-50 cursor-pointer transition-colors"
+						class="hover:bg-gray-50 cursor-pointer transition-colors {selectedCollection.id === collection.id ? 'bg-gray-50' : ''}"
 						onclick={() => handleRowClick(collection)}
 						role="button"
 						tabindex="0"

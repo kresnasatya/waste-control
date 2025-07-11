@@ -1,11 +1,9 @@
-<!-- src/lib/components/Dashboard/CollectionDetails.svelte -->
-<script>
+<script lang="ts">
 	import { Phone, Map } from '@lucide/svelte';
 	
 	let { collection } = $props();
 
-	// Mock detailed data based on the collection
-	const collectionDetails = {
+	const collectionDetails = $derived({
 		producerName: collection.producer,
 		address: 'Jl. Gatot Subroto Barat No.466 448',
 		city: 'Kota Denpasar',
@@ -16,7 +14,7 @@
 		status: collection.status,
 		container: 'Container Disposable 25L RED - 1',
 		product: 'Infused 10 KG - 1 - Rp 150.000 - Rp 1.500.000'
-	};
+	});
 
 	const collectHistory = [
 		{ time: 'Thu,18/07/2024 17:07:45', status: 'Pending' },
@@ -26,7 +24,7 @@
 		{ time: 'Thu,18/07/2024 18:20:05', status: 'Collected' }
 	];
 
-	function getStatusBadgeClass(status) {
+	function getStatusBadgeClass(status: string): string {
 		switch (status) {
 			case 'Next': return 'bg-blue-100 text-blue-800';
 			case 'Anomaly': return 'bg-red-100 text-red-800';
@@ -36,7 +34,8 @@
 	}
 </script>
 
-<div>
+<div class="bg-white rounded-lg shadow p-6 mb-6">
+	<h2 class="text-xl font-semibold">Collect Details</h2>
 	<p class="text-gray-600 mb-6">Details of collect</p>
 	
 	<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

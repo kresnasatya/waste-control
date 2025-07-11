@@ -1,12 +1,11 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { createDialog, melt } from '@melt-ui/svelte';
-    import { MapPin, Settings, Circle, Eye, Phone } from '@lucide/svelte';
+    import { MapPin, Settings, Circle, Eye } from '@lucide/svelte';
     import MapView from '$lib/components/Dashboard/MapView.svelte';
     import StatusIndicators from '$lib/components/Dashboard/StatusIndicators.svelte';
     import VehicleTable from '$lib/components/Dashboard/VehicleTable.svelte';
     import CollectionTable from '$lib/components/Dashboard/CollectionTable.svelte';
-    import CollectionDetails from '$lib/components/Dashboard/CollectionDetails.svelte';
+	import CollectionDetails from '$lib/components/Dashboard/CollectionDetails.svelte';
 
     let currentDateTime = $state('');
 
@@ -87,24 +86,10 @@
         }
     ]);
 
-    let selectedCollection = $state(null);
-
-    // Create dialog using Melt UI
-    const {
-        elements: { trigger, overlay, content, title, description, close },
-        states: { open }
-    } = createDialog({
-        forceVisible: true
-    });
-
+    let selectedCollection = $state(collections[0]);
+    
     function openCollectionDetails(collection: any) {
         selectedCollection = collection;
-        open.set(true);
-    }
-
-    function closeModal() {
-        open.set(false);
-        selectedCollection = null;
     }
 
     // Mock real-time monitoring state
@@ -189,32 +174,11 @@
 			<!-- Collection Info Panel -->
 			<div class="space-y-4">
                 <VehicleTable {vehicles} />
-                <CollectionTable {collections} {openCollectionDetails} />
+                <CollectionTable {collections} {openCollectionDetails} {selectedCollection} />
             </div>
 		</div>
     </div>
-</div>
 
-<!-- Collection Details Modal using Melt UI -->
-{#if $open}
-	<div use:melt={$overlay} class="fixed inset-0 z-50 bg-black/50">
-		<div
-			use:melt={$content}
-			class="fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[90vw] max-w-4xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-lg bg-white p-6 shadow-lg"
-		>
-			<div class="flex items-center justify-between mb-6">
-				<h2 use:melt={$title} class="text-xl font-semibold">Collect Details</h2>
-				<button
-					use:melt={$close}
-					class="text-gray-400 hover:text-gray-600 text-2xl"
-				>
-					×
-				</button>
-			</div>
-			
-			{#if selectedCollection}
-				<CollectionDetails collection={selectedCollection} />
-			{/if}
-		</div>
-	</div>
-{/if}
+    <!-- Collection details goes here -->
+    <CollectionDetails collection={selectedCollection}/>
+</div>
