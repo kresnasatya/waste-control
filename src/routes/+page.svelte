@@ -1,6 +1,8 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { Settings, Sparkles, ChartNoAxesCombined, History, Activity, WifiOff, Wifi, Play, Pause, RefreshCw } from '@lucide/svelte';
+    import { vehicles } from '$lib/stores/vehicles.svelte';
+    import { collections } from '$lib/stores/collections.svelte';
     import MapView from '$lib/components/Dashboard/MapView.svelte';
     import StatusIndicators from '$lib/components/Dashboard/StatusIndicators.svelte';
     import VehicleTable from '$lib/components/Dashboard/VehicleTable.svelte';
@@ -38,53 +40,7 @@
         anomaly: 1
     });
 
-    let vehicles = $state([
-        {
-            id: 'DK 1289 BUY',
-            driver: 'Wayan Nico',
-            totalStops: 3,
-            stopsDone: 0
-        },
-        {
-            id: 'DK 8080 YU',
-            driver: 'Nyoman Bagiada',
-            totalStops: 5,
-            stopsDone: 3
-        },
-        {
-            id: 'DK 0223 AHS',
-            driver: 'Saipul Rahmat',
-            totalStops: 2,
-            stopsDone: 0
-        },
-        {
-            id: 'DK 4567 XYZ',
-            driver: 'Made Surya',
-            totalStops: 3,
-            stopsDone: 1
-        }
-    ]);
-
-    let collections = $state([
-        {
-            id: 1,
-            producer: 'Dental Bali',
-            wasteDetail: 'Medical A-233',
-            status: 'Next'
-        },
-        {
-            id: 2,
-            producer: 'Clinic Pratama',
-            wasteDetail: 'Medical A-331, A-321',
-            status: 'Next'
-        },
-        {
-            id: 3,
-            producer: 'Vet Global Bali',
-            wasteDetail: 'Medical A-331, A-321, A-432',
-            status: 'Anomaly'
-        }
-    ]);
+    
 
     let selectedCollection = $state(collections[0]);
     
