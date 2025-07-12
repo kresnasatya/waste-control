@@ -4,11 +4,11 @@
     let selectedArea = $state('all');
 
     const indicators = [
-        { key: 'all', label: 'All', color: 'bg-gray-400' },
-		{ key: 'toDo', label: 'To Do', color: 'bg-blue-500' },
-		{ key: 'next', label: 'Next', color: 'bg-blue-600' },
-		{ key: 'done', label: 'Done', color: 'bg-green-500' },
-		{ key: 'anomaly', label: 'Anomaly', color: 'bg-red-500' }
+        { key: 'all', label: 'All', color: '' },
+		{ key: 'toDo', label: 'To Do', color: 'bg-wwwaste-blue' },
+		{ key: 'next', label: 'Next', color: 'bg-indicator-info' },
+		{ key: 'done', label: 'Done', color: 'bg-indicator-success' },
+		{ key: 'anomaly', label: 'Anomaly', color: 'bg-indicator-error' }
     ];
 </script>
 
@@ -38,7 +38,7 @@
 		
 		<div class="ml-auto text-sm">
 			<span>Total Scheduled: <strong>{statusCounts.toDo}</strong></span>
-			<span class="ml-4">Total Done: <strong>{statusCounts.done}</strong></span>
+			<span class="ml-4">Total Done: <strong class="text-indicator-success">{statusCounts.done}</strong></span>
 		</div>
 	</div>
 </div>

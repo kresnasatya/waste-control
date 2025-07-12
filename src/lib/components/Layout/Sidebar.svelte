@@ -1,6 +1,6 @@
 <script lang="ts">
     import { page } from '$app/state';
-	import { BarChart3, Calendar, FileText, Package, Settings, Truck, Users } from '@lucide/svelte';
+	import { FileText, IdCard, LayoutDashboard, Package, Settings, Truck, Users } from '@lucide/svelte';
 
     let { sidebarCollapsed = false } = $props();
 
@@ -140,10 +140,10 @@
 
     function getIcon(itemName: string) {
         switch(itemName) {
-            case 'Dashboard': return BarChart3;
-            case 'Schedule Collect':
+            case 'Dashboard': return LayoutDashboard;
+            case 'Schedule Collect': return IdCard;
             case 'Schedule Delivery':
-                return Calendar;
+                return IdCard;
             case 'Vehicles':
             case 'Shipping':
                 return Truck;
@@ -160,7 +160,7 @@
 
 <aside class="bg-white border-r border-gray-200 transition-all duration-300 overflow-y-auto {sidebarCollapsed ? 'w-16' : 'w-64'}">
     <!-- Logo -->
-    <div class="flex items-center h-16 px-6 py-4 border-b border-gray-200">
+    <div class="flex items-center h-16 px-4 py-4 border-b border-gray-200">
         <div class="flex items-center space-x-2">
             <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
                 <Package class="w-5 h-5 text-white"/>
@@ -172,9 +172,9 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="p-4">
+    <nav>
         {#each sidebarItems as section}
-            <div class="mb-6">
+            <div class="{!sidebarCollapsed ? 'p-6' : 'p-4 ml-2'} border-b border-gray-200">
                 {#if !sidebarCollapsed}
                     <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
                         {section.section}
@@ -185,11 +185,11 @@
                         {@const IconComponent = getIcon(item.name)}
                         <li>
                             <a href={item.href}
-                                class="flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                                class="flex items-center -ml-2 p-2 rounded-lg text-sm font-medium transition-colors
                                 {page.url.pathname === item.href ? 'bg-green-100 text-green-700' : 'text-gray-600 hover:bg-gray-100'}">
-                                <IconComponent class="w-5 h-5 mr-3"/>
+                                <IconComponent class="w-5 h-5"/>
                                 {#if !sidebarCollapsed}
-                                    {item.name}
+                                    <span class="ml-4">{item.name}</span>
                                 {/if}
                             </a>
                         </li>
@@ -199,12 +199,14 @@
         {/each}
 
         <!-- Settings at bottom -->
-        <div class="mt-auto pt-4 border-t">
-            <a href="/settings" class="flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100">
-            <Settings class="w-5 h-5 mr-3" />
-            {#if !sidebarCollapsed}
-                Settings
-            {/if}
+        <div class="p-4 ml-2 border-b border-gray-200">
+            <a href="/settings"
+                class="flex items-center -ml-2 p-2 rounded-lg text-sm font-medium transition-colors
+                {page.url.pathname === 'settings' ? 'bg-green-100 text-green-700' : 'text-gray-600 hover:bg-gray-100'}">
+                <Settings class="w-5 h-5"/>
+                {#if !sidebarCollapsed}
+                    <span class="ml-4">Settings</span>
+                {/if}
             </a>
         </div>
     </nav>

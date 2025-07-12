@@ -12,13 +12,13 @@
 		selectedCollection: Collection;
     } = $props();
 
-	function getStatusBadgeClass(status: string): string {
+	function getStatusClass(status: string): string {
 		switch (status) {
-			case 'Next': return 'bg-blue-100 text-blue-800';
-			case 'Anomaly': return 'bg-red-100 text-red-800';
-			case 'Done': return 'bg-green-100 text-green-800';
-			case 'Todo': return 'bg-gray-100 text-gray-800';
-			default: return 'bg-gray-100 text-gray-800';
+			case 'Next': return 'text-indicator-info';
+			case 'Anomaly': return 'text-indicator-error';
+			case 'Done': return 'text-indicator-done';
+			case 'Todo': return 'text-wwwaste-blue';
+			default: return 'text-gray-800';
 		}
 	}
 
@@ -34,18 +34,18 @@
     }
 </script>
 
-<div class="bg-white rounded-lg shadow">
+<div class="bg-tint-10 rounded-lg">
 	<div class="overflow-x-auto">
 		<table class="w-full">
-			<thead class="bg-gray-50">
+			<thead>
 				<tr>
-					<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+					<th class="px-4 py-3 text-left text-xs font-medium text-shade-gray-10 uppercase tracking-wider">
 						Producer
 					</th>
-					<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+					<th class="px-4 py-3 text-left text-xs font-medium text-shade-gray-10 uppercase tracking-wider">
 						Waste Detail
 					</th>
-					<th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+					<th class="px-4 py-3 text-left text-xs font-medium text-shade-gray-10 uppercase tracking-wider">
 						Status
 					</th>
 				</tr>
@@ -59,14 +59,14 @@
 						tabindex="0"
 						onkeydown={(e) => handleKeydown(e, collection)}
 					>
-						<td class="px-4 py-3 text-sm font-medium text-gray-900">
+						<td class="px-4 py-3 text-sm underline decoration-wwwaste-green text-wwwaste-green">
 							{collection.producer}
 						</td>
-						<td class="px-4 py-3 text-sm text-gray-700">
+						<td class="px-4 py-3 text-sm underline decoration-wwwaste-green text-wwwaste-green">
 							{collection.wasteDetail}
 						</td>
 						<td class="px-4 py-3 text-sm">
-							<span class="px-2 py-1 rounded-full text-xs font-medium {getStatusBadgeClass(collection.status)}">
+							<span class={getStatusClass(collection.status)}>
 								{collection.status}
 							</span>
 						</td>

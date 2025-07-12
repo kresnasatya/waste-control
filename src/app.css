@@ -1,3 +1,17 @@
 @import 'tailwindcss';
+@theme {
+    --color-tint-10: hsla(127, 21%, 92%, 1);
+    --color-tint-20: hsla(127, 21%, 80%, 1);
+    --color-shade-gray-10: hsla(0, 0%, 9%, 1);
+    --color-shade-gray-40: hsla(0, 0%, 35%, 1);
+    --color-shade-gray-100: hsla(0, 0%, 86%, 1);
+    --color-wwwaste-green: hsla(166, 100%, 19%, 1);
+    --color-wwwaste-blue: hsla(223, 49%, 53%, 1);
+    --color-indicator-info: hsla(205, 96%, 61%, 1);
+    --color-indicator-success: hsla(135, 73%, 51%, 1);
+    --color-indicator-error: hsla(5, 96%, 56%, 1);
+    --color-mira-orange: hsla(38, 100%, 49%, 1);
+    --color-mira-red: hsla(22, 99%, 40%, 1);
+}
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
