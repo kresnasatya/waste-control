@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { capitalizeLetter, getStatusClass } from '$lib/helper';
+
     interface Collection {
         id: number;
         producer: string;
@@ -11,16 +13,6 @@
         openCollectionDetails: (collection: Collection) => void;
 		selectedCollection: Collection;
     } = $props();
-
-	function getStatusClass(status: string): string {
-		switch (status) {
-			case 'Next': return 'text-indicator-info';
-			case 'Anomaly': return 'text-indicator-error';
-			case 'Done': return 'text-indicator-done';
-			case 'Todo': return 'text-wwwaste-blue';
-			default: return 'text-gray-800';
-		}
-	}
 
 	function handleRowClick(collection: Collection): void {
 		openCollectionDetails(collection);
@@ -67,7 +59,7 @@
 						</td>
 						<td class="px-4 py-3 text-sm">
 							<span class={getStatusClass(collection.status)}>
-								{collection.status}
+								{capitalizeLetter(collection.status)}
 							</span>
 						</td>
 					</tr>

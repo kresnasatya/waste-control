@@ -40,8 +40,6 @@
         anomaly: 1
     });
 
-    
-
     let selectedCollection = $state(collections[0]);
     
     function openCollectionDetails(collection: any) {
@@ -157,7 +155,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 			<!-- Map and Indicators -->
 			<div class="lg:col-span-1">
-				<MapView />
+				<MapView collections={collections} />
 			</div>
 
 			<!-- Collection Info Panel -->

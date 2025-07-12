@@ -1,15 +1,7 @@
 <script lang="ts">
-    let { collectionDetails } = $props();
+	import { capitalizeLetter, getStatusClass } from '$lib/helper';
 
-    function getStatusClass(status: string): string {
-		switch (status) {
-			case 'Next': return 'text-indicator-info';
-			case 'Anomaly': return 'text-indicator-error';
-			case 'Done': return 'text-indicator-done';
-			case 'Todo': return 'text-wwwaste-blue';
-			default: return 'text-gray-800';
-		}
-	}
+    let { collectionDetails } = $props();
 </script>
 
 <div class="space-y-3 text-sm">
@@ -58,7 +50,7 @@
                 <td>
                     <div class="mt-1">
                         <span class="py-1 rounded-full text-sm font-medium {getStatusClass(collectionDetails.status)}">
-                            {collectionDetails.status}
+                            {capitalizeLetter(collectionDetails.status)}
                         </span>
                     </div>
                 </td>

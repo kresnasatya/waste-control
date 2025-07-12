@@ -3,17 +3,19 @@
     import { browser } from '$app/environment';
     import "leaflet/dist/leaflet.css";
 
-    interface Marker {
-        id: number;
-        lat: number;
-        lng: number;
-        status: string;
-        title: string;
-        type: string;
+    interface Collection {
+        id: Number;
+        producer: String;
+        wasteDetail: String;
+        status: String;
+        location: {
+            lat: Number; 
+            lng: Number;
+        }
     }
 
-    let { markers = [], height = '400px'}: {
-        markers?: Marker[];
+    let { collections = [], height = '400px'}: {
+        collections?: Collection[];
         height?: string;
     } = $props();
 
@@ -21,17 +23,9 @@
     let map: any;
     let L: any;
 
-    const defaultMarkers: Marker[] = [
-        { id: 1, lat: -8.670458, lng: 115.212631, status: 'done', title: 'Dental Bali', type: 'Hazardous' },
-		{ id: 2, lat: -8.650000, lng: 115.220000, status: 'next', title: 'Clinic Pratama', type: 'Hazardous' },
-		{ id: 3, lat: -8.680000, lng: 115.200000, status: 'anomaly', title: 'Vet Global Bali', type: 'Hazardous' },
-		{ id: 4, lat: -8.660000, lng: 115.230000, status: 'todo', title: 'Hospital Kasih Ibu', type: 'Hazardous' },
-		{ id: 5, lat: -8.690000, lng: 115.240000, status: 'next', title: 'Klinik Mata Nusantara', type: 'Hazardous' }
-    ];
+    const allCollections = collections;
 
-    const allMarkers = markers.length > 0 ? markers : defaultMarkers;
-
-    const getMarkerColor = (status: string): string => {
+    const getMarkerColor = (status: String): String => {
         switch (status) {
             case 'done':
                 return '#10b981'; // green
@@ -45,7 +39,7 @@
         }
     }
 
-    const getMarkerIcon = (status: string) => {
+    const getMarkerIcon = (status: String) => {
         if (!L) {
             return null;
         }
@@ -89,15 +83,15 @@
             // Add markers
             const markerGroup = L.layerGroup().addTo(map);
 
-            allMarkers.forEach(marker => {
-                const leafletMarker = L.marker([marker.lat, marker.lng], {
-                    icon: getMarkerIcon(marker.status)
+            allCollections.forEach(collection => {
+                const leafletMarker = L.marker([collection.location.lat, collection.location.lng], {
+                    icon: getMarkerIcon(collection.status)
                 }).addTo(markerGroup);
 
                 // Add popup with details
                 leafletMarker.bindPopup(`
                 <div style="font-family: sans-serif;">
-						<h3 style="margin: 0 0 8px 0; font-size: 14px; font-weight: bold;">${marker.title}</h3>
+						<h3 style="margin: 0 0 8px 0; font-size: 14px; font-weight: bold;">${collection.producer}</h3>
 						<p style="margin: 0 0 4px 0; font-size: 12px; color: #666;">Status: Active</p>
 						<p style="margin: 0; font-size: 12px;">Last Collection: 10 minutes ago</p>
 					</div>
@@ -105,8 +99,8 @@
             });
 
             // Add sample route line between first few markers
-            if (allMarkers.length >= 3) {
-                const routeCoords = allMarkers.slice(0, 3).map(m => [m.lat, m.lng]);
+            if (allCollections.length >= 3) {
+                const routeCoords = allCollections.slice(0, 3).map(c => [c.location.lat, c.location.lng]);
                 L.polyline(routeCoords, {
                     color: '#3b82f6',
                     weight: 3,
@@ -116,7 +110,7 @@
             }
 
             // Fit map to show all markers
-            if (allMarkers.length > 0) {
+            if (allCollections.length > 0) {
                 const group = new L.featureGroup(markerGroup.getLayers());
                 map.fitBounds(group.getBounds().pad(0.1));
             }

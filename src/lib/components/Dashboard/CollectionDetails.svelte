@@ -7,13 +7,14 @@
 
 	const collectionDetails = $derived({
 		producerName: collection.producer,
+		status: collection.status,
+		location: collection.location,
 		address: 'Jl. Gatot Subroto Barat No.466 448',
 		city: 'Kota Denpasar',
 		province: 'Bali',
 		postalCode: '80116',
 		phone: '+62 8917788123',
 		driver: 'Aditya Ramadhan',
-		status: collection.status,
 		container: 'Container Disposable 25L RED - 1',
 		product: 'Infused 10 KG - 1 - Rp 150.000 - Rp 1.500.000'
 	});
@@ -38,7 +39,7 @@
 			<ProducerInfo collectionDetails={collectionDetails} />
 
 			<!-- Location Map -->
-			<MapInfo />
+			<MapInfo collectionDetails={collectionDetails} />
 		</div>
 
 		<!-- Collection Request -->
