@@ -1,5 +1,7 @@
 <script lang="ts">
-	import { Phone, Map } from '@lucide/svelte';
+	import CollectionHistory from '../CollectDetails/CollectionHistory.svelte';
+	import MapInfo from '../CollectDetails/MapInfo.svelte';
+	import ProducerInfo from '../CollectDetails/ProducerInfo.svelte';
 	
 	let { collection } = $props();
 
@@ -16,23 +18,13 @@
 		product: 'Infused 10 KG - 1 - Rp 150.000 - Rp 1.500.000'
 	});
 
-	const collectHistory = [
+	const collectionHistory = [
 		{ time: 'Thu,18/07/2024 17:07:45', status: 'Pending' },
 		{ time: 'Thu,18/07/2024 17:10:45', status: 'Approved' },
 		{ time: 'Thu,18/07/2024 18:00:05', status: 'Picked Up' },
 		{ time: 'Thu,18/07/2024 18:10:05', status: 'Arrived' },
 		{ time: 'Thu,18/07/2024 18:20:05', status: 'Collected', info: 'Note: COLLECTED' }
 	];
-
-	function getStatusClass(status: string): string {
-		switch (status) {
-			case 'Next': return 'text-indicator-info';
-			case 'Anomaly': return 'text-indicator-error';
-			case 'Done': return 'text-indicator-done';
-			case 'Todo': return 'text-wwwaste-blue';
-			default: return 'text-gray-800';
-		}
-	}
 </script>
 
 <div class="bg-white rounded-lg shadow p-6 mb-6">
@@ -40,73 +32,16 @@
 	<p class="text-gray-600 mb-6">Details of collect</p>
 	
 	<div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
-		<!-- Producer Info -->
 		<div class="col-span-2">
 			<h3 class="font-semibold mb-4 pb-4 border-b border-shade-gray-100">Producer</h3>
-			<div class="space-y-3 text-sm">
-				<table class="w-full table-auto">
-					<tbody>
-						<tr>
-							<td class="py-2 text-shade-gray-10">Producer Name</td>
-							<td class="text-shade-gray-40">{collectionDetails.producerName}</td>
-						</tr>
-						<tr>
-							<td class="py-2 text-shade-gray-10">Collect Address</td>
-							<td class="text-shade-gray-40">{collectionDetails.address}</td>
-						</tr>
-						<tr>
-							<td class="py-2 text-shade-gray-10">City</td>
-							<td class="text-shade-gray-40">{collectionDetails.city}</td>
-						</tr>
-						<tr>
-							<td class="py-2 text-shade-gray-10">Province</td>
-							<td class="text-shade-gray-40">{collectionDetails.province}</td>
-						</tr>
-						<tr>
-							<td class="py-2 text-shade-gray-10">Postal Code</td>
-							<td class="text-shade-gray-40">{collectionDetails.postalCode}</td>
-						</tr>
-						<tr>
-							<td class="py-2 text-shade-gray-10">Phone</td>
-							<td class="text-shade-gray-40">{collectionDetails.phone}</td>
-						</tr>
-						<tr>
-							<td class="py-2 text-shade-gray-10">Driver</td>
-							<td class="text-shade-gray-40">{collectionDetails.driver}</td>
-						</tr>
-						<tr>
-							<td class="py-2 text-shade-gray-10">Proof Capture</td>
-							<td>
-								<div class="mt-1">
-									<div class="w-16 h-16 bg-gray-200 rounded border-2 border-dashed border-gray-300 flex items-center justify-center">
-										<span class="text-xs text-gray-500">Image</span>
-									</div>
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td class="py-2 text-shade-gray-10">Status</td>
-							<td>
-								<div class="mt-1">
-									<span class="py-1 rounded-full text-sm font-medium {getStatusClass(collectionDetails.status)}">
-										{collectionDetails.status}
-									</span>
-								</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
+			<!-- Producer Info -->
+			<ProducerInfo collectionDetails={collectionDetails} />
 
 			<!-- Location Map -->
-			<div class="mt-6">
-				<div class="bg-gray-100 rounded-lg h-32 flex items-center justify-center">
-					<Map class="w-8 h-8 text-gray-400" />
-				</div>
-			</div>
+			<MapInfo />
 		</div>
 
-		<!-- Collect Request -->
+		<!-- Collection Request -->
 		<div class="col-span-2">
 			<h3 class="font-semibold mb-4 pb-4 border-b border-shade-gray-100">Collect Request From Producer</h3>
 			<div class="space-y-4 bg-tint-10 rounded-lg mb-4">
@@ -152,22 +87,10 @@
 			</div>
 		</div>
 
-		<!-- Collect History -->
 		<div>
 			<h3 class="font-semibold mb-4 pb-4 border-b border-shade-gray-100">Collect History</h3>
-			<div class="space-y-3">
-				{#each collectHistory as item}
-					<div class="flex items-start space-x-3 border-b border-shade-gray-100 pb-4">
-						<div class="text-sm text-gray-10 min-w-0 flex-1">
-							<div>{item.time}</div>
-							<div>{item.status}</div>
-							{#if item.info}
-								<div>{item.info}</div>
-							{/if}
-						</div>
-					</div>
-				{/each}
-			</div>
+			<!-- Collection History -->
+			<CollectionHistory collectionHistory={collectionHistory} />
 		</div>
 	</div>
 </div>
