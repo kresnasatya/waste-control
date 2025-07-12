@@ -22,11 +22,11 @@
     let L: any;
 
     const defaultMarkers: Marker[] = [
-        { id: 1, lat: -8.670458, lng: 115.212631, status: 'done', title: 'Dental Bali', type: 'Medical A-233' },
-		{ id: 2, lat: -8.650000, lng: 115.220000, status: 'next', title: 'Clinic Pratama', type: 'Medical A-331, A-321' },
-		{ id: 3, lat: -8.680000, lng: 115.200000, status: 'anomaly', title: 'Vet Global Bali', type: 'Medical A-331, A-321, A-432' },
-		{ id: 4, lat: -8.660000, lng: 115.230000, status: 'todo', title: 'Hospital Kasih Ibu', type: 'Medical A-123' },
-		{ id: 5, lat: -8.690000, lng: 115.240000, status: 'next', title: 'Klinik Mata Nusantara', type: 'Medical A-456' }
+        { id: 1, lat: -8.670458, lng: 115.212631, status: 'done', title: 'Dental Bali', type: 'Hazardous' },
+		{ id: 2, lat: -8.650000, lng: 115.220000, status: 'next', title: 'Clinic Pratama', type: 'Hazardous' },
+		{ id: 3, lat: -8.680000, lng: 115.200000, status: 'anomaly', title: 'Vet Global Bali', type: 'Hazardous' },
+		{ id: 4, lat: -8.660000, lng: 115.230000, status: 'todo', title: 'Hospital Kasih Ibu', type: 'Hazardous' },
+		{ id: 5, lat: -8.690000, lng: 115.240000, status: 'next', title: 'Klinik Mata Nusantara', type: 'Hazardous' }
     ];
 
     const allMarkers = markers.length > 0 ? markers : defaultMarkers;
@@ -98,17 +98,8 @@
                 leafletMarker.bindPopup(`
                 <div style="font-family: sans-serif;">
 						<h3 style="margin: 0 0 8px 0; font-size: 14px; font-weight: bold;">${marker.title}</h3>
-						<p style="margin: 0 0 4px 0; font-size: 12px; color: #666;">Type: ${marker.type}</p>
-						<p style="margin: 0; font-size: 12px;">
-							<span style="
-								background-color: ${getMarkerColor(marker.status)}20;
-								color: ${getMarkerColor(marker.status)};
-								padding: 2px 6px;
-								border-radius: 12px;
-								font-weight: 500;
-								text-transform: capitalize;
-							">${marker.status}</span>
-						</p>
+						<p style="margin: 0 0 4px 0; font-size: 12px; color: #666;">Status: Active</p>
+						<p style="margin: 0; font-size: 12px;">Last Collection: 10 minutes ago</p>
 					</div>
                 `);
             });
