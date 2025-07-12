@@ -32,8 +32,6 @@
 		})
 	});
 
-	$inspect(sortedVehicles);
-
 	function handleSort(field: String) {
 		if (sortField === field) {
 			// Toggle direction if same field
