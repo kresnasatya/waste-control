@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { capitalizeLetter, getStatusClass } from '$lib/helper';
+	import { getStatusClass } from '$lib/helper';
 
     interface Collection {
         id: number;
@@ -45,7 +45,7 @@
 			<tbody class="bg-white divide-y divide-gray-200">
 				{#each collections as collection}
 					<tr 
-						class="hover:bg-gray-50 cursor-pointer transition-colors {selectedCollection.id === collection.id ? 'bg-gray-50' : ''}"
+						class="hover:bg-tint-30 cursor-pointer transition-colors {selectedCollection.id === collection.id ? 'bg-gray-50' : ''}"
 						onclick={() => handleRowClick(collection)}
 						role="button"
 						tabindex="0"
@@ -58,8 +58,8 @@
 							{collection.wasteDetail}
 						</td>
 						<td class="px-4 py-3 text-sm">
-							<span class={getStatusClass(collection.status)}>
-								{capitalizeLetter(collection.status)}
+							<span class="{getStatusClass(collection.status)} capitalize">
+								{collection.status}
 							</span>
 						</td>
 					</tr>

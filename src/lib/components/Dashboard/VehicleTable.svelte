@@ -106,7 +106,7 @@
 			</thead>
 			<tbody class="bg-white divide-y divide-gray-200">
 				{#each sortedVehicles as vehicle}
-					<tr class="hover:bg-gray-50 transition-colors">
+					<tr class="hover:bg-tint-30 transition-colors">
 						<td class="px-4 py-3 text-sm underline decoration-wwwaste-green text-wwwaste-green">
 							{vehicle.id}
 						</td>
