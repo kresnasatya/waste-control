@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { capitalizeLetter, getStatusClass } from '$lib/helper';
+	import { getStatusClass } from '$lib/helper';
 
     let { collectionDetails } = $props();
 </script>
@@ -49,8 +49,8 @@
                 <td class="py-2 text-shade-gray-10">Status</td>
                 <td>
                     <div class="mt-1">
-                        <span class="py-1 rounded-full text-sm font-medium {getStatusClass(collectionDetails.status)}">
-                            {capitalizeLetter(collectionDetails.status)}
+                        <span class="py-1 rounded-full text-sm font-medium {getStatusClass(collectionDetails.status)} capitalize">
+                            {collectionDetails.status}
                         </span>
                     </div>
                 </td>
