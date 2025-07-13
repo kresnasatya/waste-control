@@ -89,10 +89,6 @@
         }
     });
 
-    $effect.pre(() => {
-        console.log('pre effect');
-    })
-
     $effect(() => {
         if (map && collectionDetails) {
             map.setView([collectionDetails.location.lat, collectionDetails.location.lng], 13);
@@ -113,9 +109,6 @@
                     <p style="margin: 0; font-size: 12px;">Last Collection: 10 minutes ago</p>
                 </div>
             `);
-            console.log('yes');
-        } else {
-            console.log('but why?');
         }
     })
 </script>
