@@ -14,6 +14,7 @@
     --color-indicator-error: hsla(5, 96%, 56%, 1);
     --color-mira-orange: hsla(38, 100%, 49%, 1);
     --color-mira-red: hsla(22, 99%, 40%, 1);
+    --color-semi-transparent-blue: hsla(223, 49%, 53%, 0.23);
 }
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
