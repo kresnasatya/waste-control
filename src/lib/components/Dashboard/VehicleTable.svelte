@@ -14,9 +14,9 @@
 	} as const;
 
 	let sortedVehicles = $derived.by(() => {
-		if (!sortField) return vehicles;
+		if (!sortField) return vehicles.items;
 
-		return [...vehicles].sort((a, b) => {
+		return [...vehicles.items].sort((a, b) => {
 			const aValue = a[sortField as keyof typeof a];
 			const bValue = b[sortField as keyof typeof b];
 
@@ -58,10 +58,10 @@
 		<table class="w-full">
 			<thead>
 				<tr>
-					<th class="px-4 py-3 text-left text-sm font-medium text-shade-gray-10 uppercase tracking-wider">
+					<th class="px-4 py-3 text-left text-sm font-medium text-shade-gray-10 tracking-wider">
 						<button class="flex items-center gap-2 hover:bg-gray-100 p-1 rounded transition-colors"
 							onclick={() => handleSort('id')}>
-							<span>Vehicle</span>
+							<span class="uppercase">Vehicle</span>
 							{#snippet icon()}
 								{@const IconComponent = getSortIcon('id')}
 								<IconComponent class="w-4 h-4 {getSortIconColor('id')}" />
@@ -69,10 +69,10 @@
 							{@render icon()}
 						</button>
 					</th>
-					<th class="px-4 py-3 text-left text-sm font-medium text-shade-gray-10 uppercase tracking-wider">
+					<th class="px-4 py-3 text-left text-sm font-medium text-shade-gray-10 tracking-wider">
 						<button class="flex items-center gap-2 hover:bg-gray-100 p-1 rounded transition-colors"
 							onclick={() => handleSort('driver')}>
-							<span>Driver</span>
+							<span class="uppercase">Driver</span>
 							{#snippet icon()}
 								{@const IconComponent = getSortIcon('driver')}
 								<IconComponent class="w-4 h-4 {getSortIconColor('driver')}" />
@@ -80,10 +80,10 @@
 							{@render icon()}
 						</button>
 					</th>
-					<th class="px-4 py-3 text-left text-sm font-medium text-shade-gray-10 uppercase tracking-wider">
+					<th class="px-4 py-3 text-left text-sm font-medium text-shade-gray-10 tracking-wider">
 						<button class="flex items-center gap-2 hover:bg-gray-100 p-1 rounded transition-colors"
 							onclick={() => handleSort('totalStops')}>
-							<span>Total Stop</span>
+							<span class="uppercase">Total Stop</span>
 							{#snippet icon()}
 								{@const IconComponent = getSortIcon('totalStops')}
 								<IconComponent class="w-4 h-4 {getSortIconColor('totalStops')}" />
@@ -91,10 +91,10 @@
 							{@render icon()}
 						</button>
 					</th>
-					<th class="px-4 py-3 text-left text-sm font-medium text-shade-gray-10 uppercase tracking-wider">
+					<th class="px-4 py-3 text-left text-sm font-medium text-shade-gray-10 tracking-wider">
 						<button class="flex items-center gap-2 hover:bg-gray-100 p-1 rounded transition-colors"
 							onclick={() => handleSort('stopsDone')}>
-							<span>Stops Done</span>
+							<span class="uppercase">Stops Done</span>
 							{#snippet icon()}
 								{@const IconComponent = getSortIcon('stopsDone')}
 								<IconComponent class="w-4 h-4 {getSortIconColor('stopsDone')}" />
@@ -108,7 +108,7 @@
 				{#each sortedVehicles as vehicle}
 					<tr class="hover:bg-tint-30 transition-colors">
 						<td class="px-4 py-3 text-sm underline decoration-wwwaste-green text-wwwaste-green">
-							{vehicle.id}
+							{vehicle.vehicleId}
 						</td>
 						<td class="px-4 py-3 text-sm underline decoration-wwwaste-green text-wwwaste-green">
 							{vehicle.driver}

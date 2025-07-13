@@ -1,7 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { Settings, Sparkles, ChartNoAxesCombined, History, Activity, WifiOff, Wifi, Play, Pause, RefreshCw, Download, Truck } from '@lucide/svelte';
-    import { vehicles } from '$lib/stores/vehicles.svelte';
     import { collections } from '$lib/stores/collections.svelte';
     import MapView from '$lib/components/Dashboard/MapView.svelte';
     import StatusIndicators from '$lib/components/Dashboard/StatusIndicators.svelte';
@@ -11,6 +10,9 @@
 	import { getStatusClass } from '$lib/helper';
     import { Chart, registerables } from 'chart.js';
 	import { realtimeCollectionData, wasteTypeDistribution } from '$lib/stores/statistic.svelte';
+
+    let { data } = $props();
+    let vehicles = $derived(data.vehicles);
 
     let currentView = $state<String>('realtime');
     let currentDateTime = $state('');
