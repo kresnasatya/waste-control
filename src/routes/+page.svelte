@@ -8,10 +8,36 @@
     import VehicleTable from '$lib/components/Dashboard/VehicleTable.svelte';
     import CollectionTable from '$lib/components/Dashboard/CollectionTable.svelte';
 	import CollectionDetails from '$lib/components/Dashboard/CollectionDetails.svelte';
+	import { getStatusClass } from '$lib/helper';
 
+    let currentView = $state<String>('realtime');
     let currentDateTime = $state('');
 
+    // Hash mapping
+    const hashMap = {
+        'realtime': '',
+        'history': 'collect-history',
+        'statistic': 'statistic',
+        'ai': 'ai-mira'
+    };
+
+    function getViewFromHash(): String
+    {
+        const hash = window.location.hash.slice(1);
+        return Object.keys(hashMap).find(key => hashMap[key as keyof typeof hashMap] === hash) || 'realtime';
+    }
+
+    function navigateToView(view: String): void
+    {
+        const hash = hashMap[view as keyof typeof hashMap];
+        window.location.hash = hash;
+        currentView = view;
+    }
+
     onMount(() => {
+        // Set initial view from URL
+        currentView = getViewFromHash();
+
         const updateDateTime = () => {
             const now = new Date();
             const options: Intl.DateTimeFormatOptions = {
@@ -29,7 +55,17 @@
         updateDateTime();
         const interval = setInterval(updateDateTime, 1000);
 
-        return () => clearInterval(interval);
+        // Hash change listener
+        const handleHashChange = () => {
+            currentView = getViewFromHash();
+        }
+
+        window.addEventListener('hashchange', handleHashChange);
+
+        return () => {
+            clearInterval(interval);
+            window.removeEventListener('hashchange', handleHashChange);
+        };
     });
 
     // Sample data
@@ -56,6 +92,25 @@
             lastUpdate = new Date().toLocaleTimeString();
         }
     }
+
+    // Collection history filters
+    let historyFilters = $state({
+        area: '',
+        dateRange: 'last-7-days',
+        wasteType: 'medical'
+    });
+
+    // Mock historical data
+    let historicalCollections = $state([
+        { id: 1, producer: 'Dental Bali', category: 'Medical', date: 'Sat, 06/14/2024 | 10:00', vehicle: 'DK 0225 OHS', driver: 'Jordan', wasteDetails: 'Medical A-353, A-323', status: 'done' },
+        { id: 2, producer: 'Clinic Pratama', category: 'Medical', date: 'Thu, 06/12/2024 | 08:00', vehicle: 'DK 0223 AHS', driver: 'Nico', wasteDetails: 'Medical A-331, A-321', status: 'done' },
+        { id: 3, producer: 'Vet Global Bali', category: 'Medical', date: 'Fri, 06/13/2024 | 09:30', vehicle: 'DK 0224 BHS', driver: 'Alex', wasteDetails: 'Medical A-335, A-322', status: 'done' },
+        { id: 4, producer: 'Wellness Center Alpha', category: 'Medical', date: 'Sun, 06/15/2024 | 11:15', vehicle: 'DK 0226 NHS', driver: 'Sam', wasteDetails: 'Medical A-334, A-324', status: 'done' },
+        { id: 5, producer: 'Bali Nutrition Hub', category: 'Medical', date: 'Mon, 06/16/2024 | 08:45', vehicle: 'DK 0227 EHS', driver: 'Taylor', wasteDetails: 'Medical A-335, A-325', status: 'done' },
+        { id: 6, producer: 'Therapeutic Massage Bali', category: 'Medical', date: 'Tue, 06/17/2024 | 14:30', vehicle: 'DK 0228 FHS', driver: 'Jamie', wasteDetails: 'Medical A-336, A-326', status: 'done' },
+        { id: 7, producer: 'Bali Physiotherapy', category: 'Medical', date: 'Wed, 06/18/2024 | 12:00', vehicle: 'DK 0229 GHS', driver: 'Morgan', wasteDetails: 'Medical A-337, A-327', status: 'cancelled' },
+        { id: 8, producer: 'Mindfulness Retreat Center', category: 'Medical', date: 'Thu, 06/19/2024 | 09:00', vehicle: 'DK 0230 HHS', driver: 'Casey', wasteDetails: 'Medical A-338, A-328', status: 'cancelled' }
+    ]);
 </script>
 
 <svelte:head>
@@ -70,26 +125,29 @@
         </div>
 
         <div class="flex items-center space-x-2">
-			<button class="px-3 py-2 bg-tint-10 text-wwwaste-green rounded-lg text-sm font-medium hover:bg-tint-10 transition-colors">
+			<button onclick={() => navigateToView('realtime')} class="px-3 py-2 
+                {currentView === 'realtime' ? 'bg-tint-10 text-wwwaste-green' : 'border border-wwwaste-green text-wwwaste-green'} rounded-lg text-sm font-medium hover:bg-tint-10 transition-colors">
 				<div class="flex items-center gap-2">
                     <span>Realtime</span>
                     <Activity class="text-wwwaste-green inline h-4 w-4"/>
                 </div>
 			</button>
-			<button class="px-3 py-2 border border-wwwaste-green text-wwwaste-green rounded-lg text-sm font-medium hover:bg-tint-10 transition-colors">
+			<button onclick={() => navigateToView('history')} class="px-3 py-2
+                {currentView === 'history' ? 'bg-tint-10 text-wwwaste-green' : 'border border-wwwaste-green text-wwwaste-green'} rounded-lg text-sm font-medium hover:bg-tint-10 transition-colors">
                 <div class="flex items-center gap-2">
                     <span>Collect History</span>
                     <History class="text-wwwaste-green inline h-4 w-4"/>
                 </div>
 			</button>
-			<button class="px-3 py-2 border border-wwwaste-green text-wwwaste-green rounded-lg text-sm font-medium hover:bg-tint-10 transition-colors">
+			<button onclick={() => navigateToView('statistic')} class="px-3 py-2
+            {currentView === 'statistic' ? 'bg-tint-10 text-wwwaste-green' : 'border border-wwwaste-green text-wwwaste-green'} rounded-lg text-sm font-medium hover:bg-tint-10 transition-colors">
 				<div class="flex items-center gap-2">
                     <span>Statistic</span>
                     <ChartNoAxesCombined class="text-wwwaste-green inline h-4 w-4"/>
                 </div>
 			</button>
             <div class="p-0.25 bg-linear-to-r from-mira-orange to-mira-red rounded-lg">
-			    <button class="bg-gray-50 hover:bg-gray-100 px-4 py-2 rounded-lg transition-colors">
+			    <button onclick={() => navigateToView('ai')} class="bg-gray-50 hover:bg-gray-100 px-4 py-2 rounded-lg transition-colors">
                     <div class="flex items-center gap-2">
                         <span class="font-semibold text-sm text-transparent bg-linear-to-r from-mira-orange to-mira-red bg-clip-text">
                             AI Mira
@@ -102,7 +160,8 @@
     </div>
 
     <!-- Real-time Monitoring Section -->
-	<div class="bg-white rounded-lg shadow p-6 mb-6">
+	{#if currentView === 'realtime'}
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
 		<div class="flex items-center justify-between mb-6">
 			<div class="flex items-center space-x-2">
 				<Activity class="w-5 h-5 text-blue-600" />
@@ -168,4 +227,87 @@
 
     <!-- Collection details goes here -->
     <CollectionDetails collection={selectedCollection}/>
+    {/if}
+
+    {#if currentView === 'history'}
+        <!-- Collection History View -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-4">
+                    <select bind:value={historyFilters.area} class="w-full border rounded-lg px-3 py-2 text-sm">
+                        <option value="">Select Area</option>
+                        <option value="denpasar">Denpasar</option>
+                        <option value="badung">Badung</option>
+                    </select>
+                    <select bind:value={historyFilters.dateRange} class="w-full border rounded-lg px-3 py-2 text-sm">
+                        <option value="last-7-days">Last 7 days</option>
+                    </select>
+                    <select bind:value={historyFilters.wasteType} class="w-full border rounded-lg px-3 py-2 text-sm">
+                        <option value="">Select Waste Type</option>
+                        <option value="medical">Medical</option>
+                        <option value="general">General</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 mb-6">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="space-y-4 bg-tint-10 rounded-lg mb-4">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr>
+                                    <th class="font-medium text-left p-3 text-shade-gray-10">PRODUCER</th>
+                                    <th class="font-medium text-left p-3 text-shade-gray-10">CATEGORY</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                {#each historicalCollections as collection}
+                                    <tr class="hover:bg-tint-30 transition-colors">
+                                        <td class="px-3 py-4 text-sm underline decoration-wwwaste-green text-wwwaste-green">{collection.producer}</td>
+                                        <td class="px-3 py-4 text-shade-gray-50">{collection.category}</td>
+                                    </tr>
+                                {/each}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow p-6 col-span-2">
+                <div class="space-y-4 bg-tint-10 rounded-lg mb-4">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr>
+                                    <th class="font-medium uppercase text-left p-3">Date</th>
+                                    <th class="font-medium uppercase text-left p-3">Vehicle</th>
+                                    <th class="font-medium uppercase text-left p-3">Driver</th>
+                                    <th class="font-medium uppercase text-left p-3">Waste Details</th>
+                                    <th class="font-medium uppercase text-left p-3">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                {#each historicalCollections as collection}
+                                    <tr class="hover:bg-tint-30 transition-colors">
+                                        <td class="px-3 py-4 text-shade-gray-10">{collection.date}</td>
+                                        <td class="px-3 py-4 text-wwwaste-green">{collection.vehicle}</td>
+                                        <td class="px-3 py-4 text-wwwaste-green">{collection.driver}</td>
+                                        <td class="px-3 py-4 text-wwwaste-green">{collection.wasteDetails}</td>
+                                        <td class="px-3 py-4 text-wwwaste-green">
+                                            <span class="px-2 py-1 rounded text-xs font-medium {getStatusClass(collection.status)} capitalize">
+                                                {collection.status}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                {/each}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <CollectionDetails collection={selectedCollection} />
+    {/if}
 </div>
