@@ -8,14 +8,14 @@
         status: string;
     }
 
-	let { collections, openCollectionDetails, selectedCollection }: {
+	let { collections, handleCollectionDetails, selectedCollection }: {
         collections: Collection[];
-        openCollectionDetails: (collection: Collection) => void;
+        handleCollectionDetails: (collection: Collection) => void;
 		selectedCollection: Collection;
     } = $props();
 
 	function handleRowClick(collection: Collection): void {
-		openCollectionDetails(collection);
+		handleCollectionDetails(collection);
 	}
 
     function handleKeydown(e: KeyboardEvent, collection: Collection): void {

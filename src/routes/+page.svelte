@@ -42,7 +42,7 @@
 
     let selectedCollection = $state(collections[0]);
     
-    function openCollectionDetails(collection: any) {
+    function handleCollectionDetails(collection: any) {
         selectedCollection = collection;
     }
 
@@ -161,7 +161,7 @@
 			<!-- Collection Info Panel -->
 			<div class="space-y-4">
                 <VehicleTable {vehicles} />
-                <CollectionTable {collections} {openCollectionDetails} {selectedCollection} />
+                <CollectionTable {collections} {handleCollectionDetails} {selectedCollection} />
             </div>
 		</div>
     </div>
