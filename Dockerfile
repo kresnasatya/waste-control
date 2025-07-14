@@ -33,7 +33,8 @@ COPY . .
 
 # Build application
 RUN --mount=type=secret,id=MONGO_URL \
-    MONGO_URL="$(cat /run/secrets/MONGO_URL)" && pnpm run build
+    export MONGO_URL="$(cat /run/secrets/MONGO_URL)" \
+    && pnpm run build
 
 # Remove development dependencies
 RUN pnpm prune --prod
