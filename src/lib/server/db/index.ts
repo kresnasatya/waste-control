@@ -1,6 +1,5 @@
 import { Db, MongoClient } from 'mongodb';
-import { env } from '$env/dynamic/private';
-const { MONGO_URL } = env;
+import { MONGO_URL } from '$env/static/private';
 
 const client = new MongoClient(MONGO_URL);
 
