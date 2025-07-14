@@ -2,6 +2,10 @@
 
 # Adjust NODE_VERSION as desired
 ARG NODE_VERSION=20.18.1
+
+# Declare build arguments for secrets
+ARG MONGO_URL
+
 FROM node:${NODE_VERSION}-slim AS base
 
 LABEL fly_launch_runtime="SvelteKit"
@@ -32,7 +36,7 @@ RUN pnpm install --frozen-lockfile --prod=false
 COPY . .
 
 # Build application
-RUN pnpm run build
+RUN MONGO_URL=$MONGO_URL pnpm run build
 
 # Remove development dependencies
 RUN pnpm prune --prod
