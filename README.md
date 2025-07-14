@@ -17,3 +17,9 @@ Tech stack:
 3. Run `cp .env.example .env` to copy `.env` file and set `MONGO_URL` value.
 4. Run `pnpm run db:seed` to seed data into database.
 4. Run `pnpm run dev --open` and it open the web app.
+
+### API Endpoint
+
+- `/api/vehicles` to get list of vehicle
+- `/api/collections` to get list of collections
+- `/api/producers` to get list of producers
