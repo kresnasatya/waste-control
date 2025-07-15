@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for waste-control on 2025-07-12T14:06:51+08:00
+# fly.toml app configuration file generated for waste-control on 2025-07-15T22:57:29+08:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -17,6 +17,6 @@ primary_region = 'sin'
   processes = ['app']
 
 [[vm]]
-  memory = '512mb'
+  memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
