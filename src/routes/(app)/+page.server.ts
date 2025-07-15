@@ -5,16 +5,16 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
     const limit = parseInt(url.searchParams.get('limit') ?? '5');
     const status = url.searchParams.get('status');
 
+    // Build the API URL with query parameters
+    const apiUrl = new URL('/api/vehicles', url.origin);
+    apiUrl.searchParams.set('page', page.toString());
+    apiUrl.searchParams.set('limit', limit.toString());
+
+    if (status) {
+        apiUrl.searchParams.set('status', status);
+    }
+
     try {
-        // Build the API URL with query parameters
-        const apiUrl = new URL('/api/vehicles', url.origin);
-        apiUrl.searchParams.set('page', page.toString());
-        apiUrl.searchParams.set('limit', limit.toString());
-
-        if (status) {
-            apiUrl.searchParams.set('status', status);
-        }
-
         // Use SvelteKit's fetch (which works server-side)
         const response = await fetch(apiUrl.toString());
 
@@ -23,19 +23,13 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
             throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
         }
 
-        const data = await response.json();
+        const result = await response.json();
 
         return {
-            vehicles: data.vehicles || data,
-            pagination: {
-                currentPage: page,
-                totalPages: data.totalPages || Math.ceil((data.total || 0) / limit),
-                total: data.total || 0,
-                limit
-            },
-            filters: {
-                status: status || null
-            }
+            vehicles: result.data || [],
+            links: result.links,
+            meta: result.meta,
+            filters: { status }
         };
 
     } catch (error) {
@@ -43,15 +37,17 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
 
         return {
             vehicles: [],
-            pagination: {
-                currentPage: 1,
-                totalPages: 0,
-                total: 0,
-                limit
+            links: null,
+            meta: {
+                current_page: page,
+                from: null,
+                last_page: 0,
+                path: '/api/vehicles',
+                per_page: limit,
+                to: null,
+                total: 0
             },
-            filters: {
-                status: status || null
-            },
+            filters: { status },
             error: error instanceof Error ? error.message : 'Failed to load vehicles'
         };
     }

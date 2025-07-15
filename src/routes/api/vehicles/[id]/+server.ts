@@ -1,15 +1,15 @@
-import { json } from '@sveltejs/kit';
+import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types.js';
 import { vehicleService } from '$lib/server/vehicle.js';
 
 export const GET: RequestHandler = async ({ params }) => {
   const result = await vehicleService.getVehicleById(params.id);
   
-  if (result.success) {
-    return json(result.data);
+  if (result.error) {
+    return json({ error: result.data }, { status: 404 });
   }
   
-  return json({ error: result.error }, { status: 404 });
+  return json({ ...result.data });
 };
 
 export const PUT: RequestHandler = async ({ params, request }) => {
@@ -17,11 +17,11 @@ export const PUT: RequestHandler = async ({ params, request }) => {
     const updateData = await request.json();
     const result = await vehicleService.updateVehicle(params.id, updateData);
     
-    if (result.success) {
-      return json(result.data);
+    if (result.error) {
+      return json({ error: result.error }, { status: 404 });
     }
     
-    return json({ error: result.error }, { status: 404 });
+    return json({ data: result.data });
   } catch (error) {
     return json({ error: 'Invalid JSON data' }, { status: 400 });
   }
@@ -30,9 +30,9 @@ export const PUT: RequestHandler = async ({ params, request }) => {
 export const DELETE: RequestHandler = async ({ params }) => {
   const result = await vehicleService.deleteVehicle(params.id);
   
-  if (result.success) {
-    return json({ message: 'Vehicle deleted successfully' });
+  if (result.error) {
+    return json({ error: result.error }, { status: 404 });
   }
   
-  return json({ error: result.error }, { status: 404 });
+  return json({ message: result.message });
 };

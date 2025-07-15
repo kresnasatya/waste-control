@@ -53,17 +53,3 @@ export type UpdateCollection = Partial<CreateCollection>;
 
 export type CreateProducer = Omit<Producer, '_id' | 'createdAt' | 'updatedAt'>;
 export type UpdateProducer = Partial<CreateProducer>;
-
-export interface DatabaseResponse<T> {
-    success: boolean;
-    data?: T;
-    error?: string;
-}
-
-export interface PaginatedResponse<T> {
-    items: T[];
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
-}

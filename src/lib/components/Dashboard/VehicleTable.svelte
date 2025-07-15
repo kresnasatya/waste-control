@@ -14,9 +14,9 @@
 	} as const;
 
 	let sortedVehicles = $derived.by(() => {
-		if (!sortField) return vehicles.items;
+		if (!sortField) return vehicles;
 
-		return [...vehicles.items].sort((a, b) => {
+		return [...vehicles].sort((a, b) => {
 			const aValue = a[sortField as keyof typeof a];
 			const bValue = b[sortField as keyof typeof b];
 

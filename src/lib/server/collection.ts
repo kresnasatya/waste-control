@@ -1,6 +1,8 @@
 import { Collection as MongoCollection, ObjectId } from 'mongodb';
 import { getDB } from './db';
-import type { Collection, CreateCollection, DatabaseResponse, PaginatedResponse, UpdateCollection } from './db/schema';
+import type { Collection, CreateCollection, UpdateCollection } from './db/schema';
+import type { ApiResponse, PaginatedApiResponse } from '$lib/types';
+import { generatePaginationLinks, generatePaginationMeta } from '$lib/helper';
 
 export class CollectionService {
   private async getCollection(): Promise<MongoCollection<Collection>> {
@@ -8,7 +10,7 @@ export class CollectionService {
     return db.collection<Collection>('collections');
   }
 
-  async createCollection(collectionData: CreateCollection): Promise<DatabaseResponse<Collection>> {
+  async createCollection(collectionData: CreateCollection): Promise<ApiResponse<Collection>> {
     try {
       const collection = await this.getCollection();
       const now = new Date();
@@ -24,50 +26,44 @@ export class CollectionService {
       if (result.acknowledged) {
         const createdCollection = await collection.findOne({ _id: result.insertedId });
         return {
-          success: true,
           data: createdCollection!,
         };
       }
       
       return {
-        success: false,
         error: 'Failed to create collection',
       };
     } catch (error) {
       console.error('Error creating collection:', error);
       return {
-        success: false,
         error: error instanceof Error ? error.message : 'Unknown error occurred',
       };
     }
   }
 
-  async getCollectionById(id: string): Promise<DatabaseResponse<Collection>> {
+  async getCollectionById(id: string): Promise<ApiResponse<Collection>> {
     try {
       const collection = await this.getCollection();
       const doc = await collection.findOne({ _id: new ObjectId(id) });
       
       if (doc) {
         return {
-          success: true,
           data: doc,
         };
       }
       
       return {
-        success: false,
         error: 'Collection not found',
       };
     } catch (error) {
       console.error('Error getting collection:', error);
       return {
-        success: false,
         error: error instanceof Error ? error.message : 'Unknown error occurred',
       };
     }
   }
 
-  async getAllCollections(page = 1, limit = 10, filter?: Partial<Collection>): Promise<DatabaseResponse<PaginatedResponse<Collection>>> {
+  async getAllCollections(page = 1, limit = 10, filter?: Partial<Collection>, baseUrl = 'api/collections'): Promise<PaginatedApiResponse<Collection>> {
     try {
       const collection = await this.getCollection();
       const skip = (page - 1) * limit;
@@ -78,27 +74,23 @@ export class CollectionService {
         collection.find(query).skip(skip).limit(limit).toArray(),
         collection.countDocuments(query),
       ]);
+
+      const totalPages = Math.ceil(total / limit);
       
       return {
-        success: true,
-        data: {
-          items: collections,
-          total,
-          page,
-          limit,
-          totalPages: Math.ceil(total / limit),
-        },
+        data: collections,
+        links: generatePaginationLinks(page, totalPages, baseUrl),
+        meta: generatePaginationMeta(page, limit, total, baseUrl),
       };
     } catch (error) {
       console.error('Error getting collections:', error);
       return {
-        success: false,
         error: error instanceof Error ? error.message : 'Unknown error occurred',
       };
     }
   }
 
-  async updateCollection(id: string, updateData: UpdateCollection): Promise<DatabaseResponse<Collection>> {
+  async updateCollection(id: string, updateData: UpdateCollection): Promise<ApiResponse<Collection>> {
     try {
       const collection = await this.getCollection();
       const updateDoc = {
@@ -114,86 +106,76 @@ export class CollectionService {
       
       if (result) {
         return {
-          success: true,
           data: result,
         };
       }
       
       return {
-        success: false,
         error: 'Collection not found or update failed',
       };
     } catch (error) {
       console.error('Error updating collection:', error);
       return {
-        success: false,
         error: error instanceof Error ? error.message : 'Unknown error occurred',
       };
     }
   }
 
-  async deleteCollection(id: string): Promise<DatabaseResponse<boolean>> {
+  async deleteCollection(id: string): Promise<ApiResponse<boolean>> {
     try {
       const collection = await this.getCollection();
       const result = await collection.deleteOne({ _id: new ObjectId(id) });
       
       if (result.deletedCount > 0) {
         return {
-          success: true,
           data: true,
         };
       }
       
       return {
-        success: false,
         error: 'Collection not found',
       };
     } catch (error) {
       console.error('Error deleting collection:', error);
       return {
-        success: false,
         error: error instanceof Error ? error.message : 'Unknown error occurred',
       };
     }
   }
 
-  async getCollectionsByStatus(status: 'todo' | 'next' | 'done' | 'anomaly'): Promise<DatabaseResponse<Collection[]>> {
+  async getCollectionsByStatus(status: 'todo' | 'next' | 'done' | 'anomaly'): Promise<ApiResponse<Collection[]>> {
     try {
       const collection = await this.getCollection();
       const collections = await collection.find({ status }).toArray();
       
       return {
-        success: true,
         data: collections,
       };
     } catch (error) {
       console.error('Error getting collections by status:', error);
       return {
-        success: false,
         error: error instanceof Error ? error.message : 'Unknown error occurred',
       };
     }
   }
 
-  async getCollectionsByVehicle(vehicleId: string): Promise<DatabaseResponse<Collection[]>> {
+  async getCollectionsByVehicle(vehicleId: string): Promise<ApiResponse<Collection[]>> {
     try {
       const collection = await this.getCollection();
       const collections = await collection.find({ vehicleId }).toArray();
       
       return {
-        success: true,
         data: collections,
       };
     } catch (error) {
       console.error('Error getting collections by vehicle:', error);
       return {
-        success: false,
         error: error instanceof Error ? error.message : 'Unknown error occurred',
       };
     }
   }
 
-  async markCollectionCompleted(id: string): Promise<DatabaseResponse<Collection>> {
+  async markCollectionCompleted(id: string): Promise<ApiResponse<Collection>> {
     try {
       const collection = await this.getCollection();
       const result = await collection.findOneAndUpdate(
@@ -210,19 +192,16 @@ export class CollectionService {
       
       if (result) {
         return {
-          success: true,
           data: result,
         };
       }
       
       return {
-        success: false,
         error: 'Collection not found',
       };
     } catch (error) {
       console.error('Error marking collection completed:', error);
       return {
-        success: false,
         error: error instanceof Error ? error.message : 'Unknown error occurred',
       };
     }
