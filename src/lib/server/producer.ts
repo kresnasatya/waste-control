@@ -143,7 +143,7 @@ export class ProducerService {
     }
   }
 
-  async searchProducers(searchTerm: string): Promise<ApiResponse<Producer[]>> {
+  async searchProducers(searchTerm: string): Promise<PaginatedApiResponse<Producer>> {
     try {
       const collection = await this.getCollection();
       const producers = await collection.find({
@@ -166,7 +166,7 @@ export class ProducerService {
     }
   }
 
-  async getProducersByCity(city: string): Promise<ApiResponse<Producer[]>> {
+  async getProducersByCity(city: string): Promise<PaginatedApiResponse<Producer>> {
     try {
       const collection = await this.getCollection();
       const producers = await collection.find({ city }).toArray();

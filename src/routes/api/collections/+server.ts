@@ -14,11 +14,15 @@ export const GET: RequestHandler = async ({ url }) => {
   
   const result = await collectionService.getAllCollections(page, limit, Object.keys(filter).length > 0 ? filter : undefined);
   
-  if (result.success) {
-    return json(result.data);
+  if (result.error) {
+    return json({ error: result.error }, { status: 500 });
   }
   
-  return json({ error: result.error }, { status: 500 });
+  return json({ 
+    data: result.data,
+    links: result.links,
+    meta: result.meta
+  });
 };
 
 export const POST: RequestHandler = async ({ request }) => {
@@ -26,11 +30,11 @@ export const POST: RequestHandler = async ({ request }) => {
     const collectionData = await request.json();
     const result = await collectionService.createCollection(collectionData);
     
-    if (result.success) {
-      return json(result.data, { status: 201 });
+    if (result.error) {
+      return json({ error: result.error }, { status: 400 });
     }
     
-    return json({ error: result.error }, { status: 400 });
+    return json({ data: result.data }, { status: 201 });
   } catch (error) {
     return json({ error: 'Invalid JSON data' }, { status: 400 });
   }

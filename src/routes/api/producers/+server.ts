@@ -10,27 +10,39 @@ export const GET: RequestHandler = async ({ url }) => {
   
   if (search) {
     const result = await producerService.searchProducers(search);
-    if (result.success) {
-      return json(result.data);
+    if (result.error) {
+      return json({ error: result.error }, { status: 500 });
     }
-    return json({ error: result.error }, { status: 500 });
+    return json({ 
+      data: result.data,
+      links: result.links,
+      meta: result.meta
+    });
   }
   
   if (city) {
     const result = await producerService.getProducersByCity(city);
-    if (result.success) {
-      return json(result.data);
+    if (result.error) {
+      return json({ error: result.error }, { status: 500 });
     }
-    return json({ error: result.error }, { status: 500 });
+    return json({ 
+      data: result.data,
+      links: result.links,
+      meta: result.meta
+    });
   }
   
   const result = await producerService.getAllProducers(page, limit);
   
-  if (result.success) {
-    return json(result.data);
+  if (result.error) {
+    return json({ error: result.error }, { status: 500 });
   }
   
-  return json({ error: result.error }, { status: 500 });
+  return json({ 
+    data: result.data,
+    links: result.links,
+    meta: result.meta
+  });
 };
 
 export const POST: RequestHandler = async ({ request }) => {
@@ -38,11 +50,11 @@ export const POST: RequestHandler = async ({ request }) => {
     const producerData = await request.json();
     const result = await producerService.createProducer(producerData);
     
-    if (result.success) {
-      return json(result.data, { status: 201 });
+    if (result.error) {
+      return json({ error: result.error }, { status: 400 });
     }
     
-    return json({ error: result.error }, { status: 400 });
+    return json(result.data, { status: 201 });
   } catch (error) {
     return json({ error: 'Invalid JSON data' }, { status: 400 });
   }
