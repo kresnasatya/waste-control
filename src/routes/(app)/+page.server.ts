@@ -1,54 +1,140 @@
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ url, fetch }) => {
-    const page = parseInt(url.searchParams.get('page') ?? '1');
-    const limit = parseInt(url.searchParams.get('limit') ?? '5');
-    const status = url.searchParams.get('status');
+    const vehiclesUrl = new URL('/api/vehicles', url.origin);
+    vehiclesUrl.searchParams.set('page', '1');
+    vehiclesUrl.searchParams.set('limit', '5');
 
-    // Build the API URL with query parameters
-    const apiUrl = new URL('/api/vehicles', url.origin);
-    apiUrl.searchParams.set('page', page.toString());
-    apiUrl.searchParams.set('limit', limit.toString());
-
-    if (status) {
-        apiUrl.searchParams.set('status', status);
-    }
+    const collectionsUrl = new URL('/api/collections', url.origin);
+    collectionsUrl.searchParams.set('page', '1');
+    collectionsUrl.searchParams.set('limit', '3');
 
     try {
         // Use SvelteKit's fetch (which works server-side)
-        const response = await fetch(apiUrl.toString());
+        const [vehiclesResponse, collectionsResponse] = await Promise.allSettled([
+            fetch(vehiclesUrl.toString()),
+            fetch(collectionsUrl.toString())
+        ]);
 
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-            throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+        // Initial response for vehicle
+        let vehiclesData: {
+            vehicles: any[];
+            links: any;
+            meta: any;
+            error: string | null;
+        } = {
+            vehicles: [],
+            links: null,
+            meta: {
+                current_page: 1,
+                from: null,
+                last_page: 0,
+                path: '/api/vehicles',
+                per_page: 5,
+                to: null,
+                total: 0
+            },
+            error: null,
         }
 
-        const result = await response.json();
+        if (vehiclesResponse.status === 'fulfilled' && vehiclesResponse.value.ok) {
+            const vehiclesResult = await vehiclesResponse.value.json();
+            vehiclesData = {
+                vehicles: vehiclesResult.data || [],
+                links: vehiclesResult.links,
+                meta: vehiclesResult.meta,
+                error: null
+            }
+        } else if (vehiclesResponse.status === 'rejected') {
+            vehiclesData.error = vehiclesResponse.reason instanceof Error
+                ? vehiclesResponse.reason.message
+                : 'Failed to load vehicles';
+        } else if (vehiclesResponse.status === 'fulfilled') {
+            const errorData = await vehiclesResponse.value.json().catch(() => { error: 'Unknown error' });
+            vehiclesData.error = errorData.error || `HTTP ${vehiclesResponse.value.status}: ${vehiclesResponse.value.statusText}`;
+        }
+
+        // Initial response for collections
+        let collectionsData: {
+            collections: any[];
+            links: any;
+            meta: any;
+            error: string | null;
+        } = {
+            collections: [],
+            links: null,
+            meta: {
+                current_page: 1,
+                from: null,
+                last_page: 0,
+                path: '/api/collections',
+                per_page: 5,
+                to: null,
+                total: 0
+            },
+            error: null,
+        }
+
+        if (collectionsResponse.status === 'fulfilled' && collectionsResponse.value.ok) {
+            const collectionsResult = await collectionsResponse.value.json();
+            collectionsData = {
+                collections: collectionsResult.data || [],
+                links: collectionsResult.links,
+                meta: collectionsResult.meta,
+                error: null
+            }
+        } else if (collectionsResponse.status === 'rejected') {
+            collectionsData.error = collectionsResponse.reason instanceof Error
+                ? collectionsResponse.reason.message
+                : 'Failed to load collections';
+        } else if (collectionsResponse.status === 'fulfilled') {
+            const errorData = await collectionsResponse.value.json().catch(() => { error: 'Unknown error' });
+            collectionsData.error = errorData.error || `HTTP ${collectionsResponse.value.status}: ${collectionsResponse.value.statusText}`;
+        }
 
         return {
-            vehicles: result.data || [],
-            links: result.links,
-            meta: result.meta,
-            filters: { status }
+            vehicles: vehiclesData.vehicles,
+            vehiclesLinks: vehiclesData.links,
+            vehiclesMeta: vehiclesData.meta,
+            vehiclesError: vehiclesData.error,
+
+            collections: collectionsData.collections,
+            collectionsLinks: collectionsData.links,
+            collectionsMeta: collectionsData.meta,
+            collectionsError: collectionsData.error,
         };
 
     } catch (error) {
         console.error('Error loading vehicles from API:', error);
 
         return {
+            // Vehicles fallback data
             vehicles: [],
-            links: null,
-            meta: {
-                current_page: page,
+            vehiclesLinks: null,
+            vehiclesMeta: {
+                current_page: 1,
                 from: null,
                 last_page: 0,
                 path: '/api/vehicles',
-                per_page: limit,
+                per_page: 5,
                 to: null,
                 total: 0
             },
-            filters: { status },
-            error: error instanceof Error ? error.message : 'Failed to load vehicles'
+            vehiclesError: error instanceof Error ? error.message : 'Failed to load vehicles',
+            
+            // Collections fallback data
+            collections: [],
+            collectionsLinks: null,
+            collectionsMeta: {
+                current_page: 1,
+                from: null,
+                last_page: 0,
+                path: '/api/collections',
+                per_page: 3,
+                to: null,
+                total: 0
+            },
+            collectionsError: error instanceof Error ? error.message : 'Failed to load collections'
         };
     }
 }

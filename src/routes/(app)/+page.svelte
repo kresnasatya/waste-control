@@ -1,7 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { Settings, Sparkles, ChartNoAxesCombined, History, Activity, WifiOff, Wifi, Play, Pause, RefreshCw, Download, Truck } from '@lucide/svelte';
-    import { collections } from '$lib/stores/collections.svelte';
     import MapView from '$lib/components/Dashboard/MapView.svelte';
     import StatusIndicators from '$lib/components/Dashboard/StatusIndicators.svelte';
     import VehicleTable from '$lib/components/Dashboard/VehicleTable.svelte';
@@ -13,6 +12,7 @@
 
     let { data } = $props();
     let vehicles = $derived(data.vehicles);
+    let collections = $derived(data.collections);
 
     let currentView = $state<String>('realtime');
     let currentDateTime = $state('');
@@ -80,10 +80,14 @@
         anomaly: 1
     });
 
-    let selectedCollection = $state(collections[0]);
+    let defaultCollection = $derived(collections?.[0]);
+
+    let userSelectedCollection = $state<any>(null);
+
+    let selectedCollection = $derived(userSelectedCollection ?? defaultCollection);
     
     function handleCollectionDetails(collection: any) {
-        selectedCollection = collection;
+        userSelectedCollection = collection;
     }
 
     // Mock real-time monitoring state
